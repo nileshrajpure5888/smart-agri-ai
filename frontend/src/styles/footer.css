@@ -1,0 +1,102 @@
+/* ===========================
+   ✅ Simple Modern Footer CSS
+   =========================== */
+
+.appFooter {
+  background: #0b1220;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+}
+
+.footerLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  color: #22c55e;
+  font-weight: 900;
+}
+
+.footerBrandName {
+  font-weight: 900;
+  color: white;
+  font-size: 14px;
+}
+
+.footerTagline {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.65);
+}
+
+.footerLinksRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerLink {
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 13px;
+  color: rgba(226, 232, 240, 0.75);
+  transition: 0.2s ease;
+}
+
+.footerLink:hover {
+  color: #22c55e;
+}
+
+/* ✅ smaller links */
+.footerSmallLink {
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.55);
+  transition: 0.2s ease;
+}
+
+.footerSmallLink:hover {
+  color: #22c55e;
+}
+
+.footerDot {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.3);
+}
+
+.footerDivider {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.25);
+  margin: 0 2px;
+}
+
+.footerCopy {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.55);
+  font-weight: 700;
+}
+
+/* ✅ right-side column */
+.footerRight {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+  .footerRight {
+    align-items: flex-start;
+  }
+}
+
+.footerIndia {
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.45);
+  font-weight: 700;
+}

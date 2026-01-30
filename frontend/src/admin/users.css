@@ -1,0 +1,193 @@
+/* ================= CONTAINER ================= */
+
+.admin-users {
+  padding: 30px;
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+
+
+/* ================= HEADER ================= */
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+.users-header h2 {
+  font-size: 24px;
+}
+
+
+.count {
+  background: #dcfce7;
+  color: #166534;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+
+/* ================= CONTROLS ================= */
+
+.controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+
+.controls input,
+.controls select {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  width: 220px;
+}
+
+
+/* ================= TABLE ================= */
+
+.table-card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  overflow-x: auto;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+thead {
+  background: #166534;
+  color: white;
+}
+
+
+thead th {
+  padding: 13px;
+  font-size: 14px;
+  text-align: left;
+}
+
+
+tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: 0.2s;
+}
+
+
+tbody tr:hover {
+  background: #f0fdf4;
+}
+
+
+tbody td {
+  padding: 12px;
+  font-size: 14px;
+}
+
+
+/* ================= ROLE ================= */
+
+.role {
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+
+.role.admin {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+
+.role.editor {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+
+.role.user {
+  background: #dcfce7;
+  color: #166534;
+}
+
+
+/* ================= BUTTON ================= */
+
+.btn-delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+
+/* ================= PAGINATION ================= */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+
+.pagination button {
+  background: #166534;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+.pagination button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+
+/* ================= LOADING ================= */
+
+.skeleton {
+  padding: 30px;
+  text-align: center;
+  color: #6b7280;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input,
+  .controls select {
+    width: 100%;
+  }
+
+}

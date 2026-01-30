@@ -1,0 +1,779 @@
+/* ================= ROOT ================= */
+
+:root {
+  --primary: #15803d;
+  --primary-dark: #14532d;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+
+/* ================= GLOBAL ================= */
+
+.home {
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ================= NAVBAR ================= */
+
+.home-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: white;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 40px;
+  transition: box-shadow 0.3s ease;
+}
+
+.home-nav.scrolled {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 9px 20px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary.large,
+.btn-outline.large {
+  padding: 12px 26px;
+  font-size: 15px;
+}
+
+/* ================= HERO ================= */
+
+.hero-section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 140px 24px 100px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero-text .badge {
+  display: inline-block;
+  background: #dcfce7;
+  color: var(--primary-dark);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.hero-text h1 {
+  font-size: 44px;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+.hero-text h1 span {
+  color: var(--primary);
+}
+
+.hero-text p {
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 14px;
+}
+
+.hero-image-wrapper {
+  position: relative;
+}
+
+.hero-image {
+  width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+  transform: scale(1.02);
+}
+
+/* ================= FEATURES / USES ================= */
+
+.features {
+  background: white;
+  padding: 90px 24px;
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.section-desc {
+  color: var(--muted);
+  max-width: 500px;
+  margin: auto;
+  margin-bottom: 50px;
+}
+
+.feature-grid {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 24px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card h3 {
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ================= STATS ================= */
+
+.stats {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 24px 90px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 26px 20px;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card h3 {
+  color: var(--primary);
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.stat-card p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ================= TESTIMONIALS ================= */
+
+.testimonials {
+  padding: 90px 24px;
+  text-align: center;
+  background: var(--bg);
+}
+
+.testimonials h2 {
+  font-size: 32px;
+  margin-bottom: 50px;
+}
+
+.testimonial-grid {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.testimonial-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 26px 22px;
+  transition: 0.2s ease;
+}
+
+.testimonial-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.testimonial-card img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+.testimonial-card h4 {
+  margin-bottom: 2px;
+}
+
+.testimonial-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.testimonial-card p {
+  margin-top: 10px;
+  font-style: italic;
+  color: #334155;
+}
+
+/* ================= CTA ================= */
+
+.cta {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 90px 24px;
+  text-align: center;
+}
+
+.cta h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.cta p {
+  opacity: 0.9;
+  margin-bottom: 26px;
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+  background: #052e16;
+  color: white;
+  padding: 40px 24px 20px;
+}
+
+.footer-content {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.footer h3 {
+  margin-bottom: 6px;
+}
+
+.footer h4 {
+  margin-bottom: 10px;
+}
+
+.footer a {
+  display: block;
+  color: #bbf7d0;
+  text-decoration: none;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 12px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+  .home-nav {
+    padding: 16px 22px;
+  }
+
+  .hero-section {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .hero-text p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+}
+
+
+
+/* ================= REVIEW FORM FIX ================= */
+
+.cta {
+  background: linear-gradient(135deg, #1b7a3a, #0f4d25);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.cta h2 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+/* Card */
+
+.review-form-card {
+  background: #ffffff;
+  max-width: 420px;
+  margin: auto;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs */
+
+.review-form-card input,
+.review-form-card textarea,
+.review-form-card select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.review-form-card textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Focus Effect */
+
+.review-form-card input:focus,
+.review-form-card textarea:focus,
+.review-form-card select:focus {
+  border-color: #1b7a3a;
+  box-shadow: 0 0 0 2px rgba(27,122,58,0.15);
+}
+
+/* Button */
+
+.review-form-card button {
+  margin-top: 10px;
+  padding: 12px;
+  background: #1b7a3a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.review-form-card button:hover {
+  background: #145c2d;
+  transform: translateY(-2px);
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 500px) {
+
+  .review-form-card {
+    padding: 25px 18px;
+  }
+
+  .cta h2 {
+    font-size: 26px;
+  }
+}
+
+/* ================= GLOBAL SECTION FIX ================= */
+
+.section,
+.features,
+.stories,
+.testimonials,
+.cta {
+  width: 100%;
+  padding: 80px 20px;
+  box-sizing: border-box;
+}
+
+.section h2,
+.features h2,
+.stories h2,
+.testimonials h2,
+.cta h2 {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.section-subtitle {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* ================= SUCCESS STORIES ================= */
+
+.stories {
+  background: #f8fdf9;
+}
+
+.stories-grid {
+  max-width: 1200px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.story-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+
+  transition: all 0.3s ease;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.story-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.story-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.story-body {
+  padding: 20px;
+}
+
+.story-body h4 {
+  color: #1b7a3a;
+  margin-bottom: 6px;
+}
+
+.story-crop {
+  font-size: 14px;
+  color: #666;
+}
+
+.story-body p {
+  margin: 12px 0;
+  line-height: 1.5;
+  color: #444;
+}
+
+.story-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profit-badge {
+  background: #1b7a3a;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* ================= REVIEWS ================= */
+
+.testimonials {
+  background: #ffffff;
+}
+
+.testimonial-grid {
+  max-width: 1100px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.testimonial-card {
+  background: #f9f9f9;
+  border-radius: 14px;
+
+  padding: 30px 25px;
+  text-align: center;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+
+  transition: 0.3s;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+}
+
+.testimonial-card h4 {
+  margin-bottom: 4px;
+  color: #1b7a3a;
+}
+
+.testimonial-card span {
+  font-size: 14px;
+  color: #777;
+}
+
+.stars {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.testimonial-card p {
+  font-style: italic;
+  color: #444;
+}
+
+/* ================= CTA / FORM ================= */
+
+.cta {
+  background: linear-gradient(135deg, #1b7a3a, #0f4d25);
+  text-align: center;
+}
+
+.review-form-card {
+  background: white;
+
+  max-width: 420px;
+  margin: auto;
+
+  padding: 30px 25px;
+
+  border-radius: 16px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review-form-card input,
+.review-form-card textarea,
+.review-form-card select {
+  width: 100%;
+  padding: 12px 14px;
+
+  border-radius: 8px;
+  border: 1px solid #ccc;
+
+  font-size: 15px;
+}
+
+.review-form-card button {
+  background: #1b7a3a;
+  color: white;
+
+  padding: 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.review-form-card button:hover {
+  background: #145c2d;
+  transform: translateY(-2px);
+}
+
+/* ================= EMPTY STATE ================= */
+
+.stories p,
+.testimonials p {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+
+  .section,
+  .features,
+  .stories,
+  .testimonials,
+  .cta {
+    padding: 60px 15px;
+  }
+
+  .section h2,
+  .features h2,
+  .stories h2,
+  .testimonials h2,
+  .cta h2 {
+    font-size: 26px;
+  }
+}
+
+/* Success Story Image - Full Fit */
+
+.story-card img {
+  width: 100%;
+  height: 230px;          /* Fixed card height */
+
+  object-fit: contain;   /* Show full image */
+  object-position: center;
+
+  background-color: #f5f5f5; /* Fill empty space */
+
+  padding: 10px;         /* Space around image */
+
+  border-radius: 14px 14px 0 0;
+
+  box-sizing: border-box;
+}
+
+/* Success Story Image - Perfect Fit */
+
+.story-card img {
+  width: 100%;
+  height: 240px;          /* Bigger image area */
+
+  object-fit: contain;   /* No cutting */
+  object-position: center;
+
+  background: #fafafa;   /* Light background */
+
+  padding: 6px;          /* Less padding */
+
+  border-radius: 16px 16px 0 0;
+
+  display: block;
+}
+
+.story-card img {
+  transition: transform 0.3s ease;
+}
+
+.story-card:hover img {
+  transform: scale(1.05);
+}
+
+
+
+.story-card img {
+  transition: transform 0.3s ease;
+}
+
+.story-card:hover img {
+  transform: scale(1.05);
+}
+
+
+
+/* Story Card */
+
+.story-card {
+  border-radius: 16px;
+  overflow: hidden;      /* Crop image inside card */
+  background: #fff;
+}
+
+
+
+@media (max-width: 768px) {
+  .story-card img {
+    height: 200px;
+  }
+}
