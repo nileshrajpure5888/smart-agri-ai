@@ -25,3 +25,4 @@ python-multipart==0.0.21
 email-validator==2.2.0
 rapidfuzz==3.9.6
 
+reportlab==4.1.0
