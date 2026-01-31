@@ -22,3 +22,4 @@ openai==2.15.0
 google-genai==1.59.0
 
 python-multipart==0.0.21
+email-validator==2.2.0
