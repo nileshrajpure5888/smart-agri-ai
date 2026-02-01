@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# Backend uploads
+backend/uploads/
+uploads/
+
+# Python venv (if any)
+venv/
+.env/
+
+# FastAPI / Python build
+*.sqlite3
+

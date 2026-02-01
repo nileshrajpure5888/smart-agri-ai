@@ -6,10 +6,6 @@ import "./home.css";
 
 /* Assets */
 import farmerImg from "../../assets/farmer.webp";
-import defaultFarmer from "../../assets/default-farmer.png";
-
-/* ENV */
-const API_URL = import.meta.env.VITE_API_URL;
 
 /* FEATURES */
 const features = [
@@ -43,6 +39,7 @@ export default function Home() {
     rating: 5,
   });
 
+
   /* NAV SCROLL */
   useEffect(() => {
 
@@ -54,11 +51,13 @@ export default function Home() {
 
   }, []);
 
+
   /* LOAD DATA */
   useEffect(() => {
     fetchStories();
     fetchReviews();
   }, []);
+
 
   /* FETCH STORIES */
   const fetchStories = async () => {
@@ -67,9 +66,9 @@ export default function Home() {
 
       setLoadingStories(true);
 
-      const res = await api.get("/api/stories/?limit=6");
+      const res = await api.get("/api/stories/");
 
-      setStories(res.data);
+      setStories(res.data.slice(0, 6));
 
     } catch (err) {
 
@@ -83,6 +82,7 @@ export default function Home() {
     }
   };
 
+
   /* FETCH REVIEWS */
   const fetchReviews = async () => {
 
@@ -90,9 +90,9 @@ export default function Home() {
 
       setLoadingReviews(true);
 
-      const res = await api.get("/api/reviews/approved/?limit=6");
+      const res = await api.get("/api/reviews/approved/");
 
-      setReviews(res.data);
+      setReviews(res.data.slice(0, 6));
 
     } catch (err) {
 
@@ -106,6 +106,7 @@ export default function Home() {
     }
   };
 
+
   /* FORM HANDLER */
   const handleChange = (e) => {
 
@@ -114,6 +115,7 @@ export default function Home() {
       [e.target.name]: e.target.value,
     });
   };
+
 
   /* SUBMIT REVIEW */
   const submitReview = async (e) => {
@@ -144,19 +146,20 @@ export default function Home() {
     }
   };
 
-  /* IMAGE HANDLER */
-  const getStoryImage = (img) => {
 
-    if (!img) return defaultFarmer;
+  /* AVATAR HELPER */
+  const getInitial = (name) => {
 
-    if (img.startsWith("http")) return img;
+    if (!name) return "?";
 
-    return `${API_URL}${img}`;
+    return name.charAt(0).toUpperCase();
   };
+
 
   /* UI */
   return (
     <div className="home">
+
 
       {/* ================= NAVBAR ================= */}
 
@@ -289,10 +292,12 @@ export default function Home() {
 
               <div key={s._id} className="story-card">
 
-                <img
-                  src={getStoryImage(s.image)}
-                  alt={s.name}
-                />
+
+                {/* AVATAR */}
+                <div className="avatar-circle">
+                  {getInitial(s.name)}
+                </div>
+
 
                 <div className="story-body">
 

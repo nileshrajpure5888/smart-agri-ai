@@ -1,8 +1,4 @@
-import os
-import shutil
-import uuid
-
-from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
+from fastapi import APIRouter, Form, Depends, HTTPException
 from bson import ObjectId
 
 from app.database import db
@@ -15,12 +11,6 @@ router = APIRouter(
 )
 
 
-# ================= UPLOAD DIR =================
-
-UPLOAD_DIR = "uploads/stories"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
 # ================= ADD STORY =================
 
 @router.post("/", dependencies=[Depends(editor_or_admin)])
@@ -28,35 +18,19 @@ async def add_story(
     name: str = Form(...),
     crop: str = Form(...),
     profit: str = Form(...),
-    story: str = Form(...),
-    image: UploadFile = File(None)
+    story: str = Form(...)
 ):
 
-    filename = ""
-
-
-    # Save image
-    if image:
-
-        if image.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
-            raise HTTPException(400, "Only JPG / PNG allowed")
-
-        ext = image.filename.split(".")[-1]
-
-        filename = f"{uuid.uuid4()}.{ext}"
-
-        file_path = os.path.join(UPLOAD_DIR, filename)
-
-        with open(file_path, "wb") as f:
-            shutil.copyfileobj(image.file, f)
+    # Validation
+    if not name.strip() or not crop.strip() or not story.strip():
+        raise HTTPException(400, "All fields are required")
 
 
     data = {
         "name": name.strip(),
         "crop": crop.strip(),
         "profit": profit.strip(),
-        "story": story.strip(),
-        "image": f"/uploads/stories/{filename}" if filename else ""
+        "story": story.strip()
     }
 
 
@@ -74,7 +48,7 @@ def get_stories():
     stories = []
 
 
-    for s in db["stories"].find():
+    for s in db["stories"].find().sort("_id", -1):
 
         s["_id"] = str(s["_id"])
 
@@ -92,8 +66,7 @@ async def update_story(
     name: str = Form(...),
     crop: str = Form(...),
     profit: str = Form(...),
-    story: str = Form(...),
-    image: UploadFile = File(None)
+    story: str = Form(...)
 ):
 
     story_doc = db["stories"].find_one({"_id": ObjectId(id)})
@@ -102,26 +75,9 @@ async def update_story(
         raise HTTPException(404, "Story not found")
 
 
-    new_image = story_doc.get("image", "")
-
-
-    # Replace image if uploaded
-    if image:
-
-        if image.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
-            raise HTTPException(400, "Only JPG / PNG allowed")
-
-        ext = image.filename.split(".")[-1]
-
-        filename = f"{uuid.uuid4()}.{ext}"
-
-        file_path = os.path.join(UPLOAD_DIR, filename)
-
-        with open(file_path, "wb") as f:
-            shutil.copyfileobj(image.file, f)
-
-
-        new_image = f"/uploads/stories/{filename}"
+    # Validation
+    if not name.strip() or not crop.strip() or not story.strip():
+        raise HTTPException(400, "All fields are required")
 
 
     db["stories"].update_one(
@@ -130,8 +86,7 @@ async def update_story(
             "name": name.strip(),
             "crop": crop.strip(),
             "profit": profit.strip(),
-            "story": story.strip(),
-            "image": new_image
+            "story": story.strip()
         }}
     )
 
@@ -148,15 +103,6 @@ def delete_story(id: str):
 
     if not story:
         raise HTTPException(404, "Story not found")
-
-
-    # Delete file
-    if story.get("image"):
-
-        img_path = story["image"].replace("/uploads/", "uploads/")
-
-        if os.path.exists(img_path):
-            os.remove(img_path)
 
 
     db["stories"].delete_one({"_id": ObjectId(id)})

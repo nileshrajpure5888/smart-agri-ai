@@ -94,6 +94,10 @@ app.include_router(story_router)    # ✅ ADD
 app.include_router(market_sync_router)
 app.include_router(market_ai_routes.router)
 
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 # ================= HOME =================
 @app.get("/")
 def home():

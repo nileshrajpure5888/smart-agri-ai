@@ -34,7 +34,7 @@ import MyBuyRequests from "./pages/MyBuyRequests";
 
 /* ================= ADMIN ================= */
 import AdminLayout from "./admin/AdminLayout";
-import AdminDashboard from "./admin/Admindashboard";
+import AdminDashboard from "./admin/AdminDashboard";
 import AdminEntry from "./pages/AdminEntry";
 
 import Reviews from "./admin/Reviews";

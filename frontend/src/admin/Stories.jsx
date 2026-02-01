@@ -2,28 +2,23 @@ import { useEffect, useState } from "react";
 import api from "../api";
 import "./stories.css";
 
-/* Default Images */
-import maleDefault from "../assets/male1.webp";
-import femaleDefault from "../assets/female1.webp";
-
-const API_URL = import.meta.env.VITE_API_URL;
-
+const PAGE_SIZE = 6;
 
 export default function Stories() {
 
+  /* ================= STATE ================= */
+
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+
   const [editId, setEditId] = useState(null);
-
-  const [preview, setPreview] = useState(null);
-
 
   const [form, setForm] = useState({
     name: "",
     crop: "",
     profit: "",
     story: "",
-    image: null,
   });
 
 
@@ -36,9 +31,16 @@ export default function Stories() {
 
   const loadStories = async () => {
 
-    const res = await api.get("/api/stories/");
+    try {
 
-    setStories(res.data);
+      const res = await api.get("/api/stories/");
+      setStories(res.data);
+
+    } catch {
+
+      alert("Failed to load stories ❌");
+
+    }
   };
 
 
@@ -53,36 +55,18 @@ export default function Stories() {
   };
 
 
-  /* ================= FILE ================= */
-
-  const handleFile = (e) => {
-
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-
-    if (!file.type.startsWith("image/")) {
-      alert("Please select image file");
-      return;
-    }
-
-
-    setForm({
-      ...form,
-      image: file,
-    });
-
-
-    setPreview(URL.createObjectURL(file));
-  };
-
-
   /* ================= SUBMIT ================= */
 
   const handleSubmit = async (e) => {
 
     e.preventDefault();
+
+
+    if (!form.name || !form.crop || !form.profit || !form.story) {
+      alert("Fill all fields ❌");
+      return;
+    }
+
 
     try {
 
@@ -90,14 +74,9 @@ export default function Stories() {
 
       const fd = new FormData();
 
-      fd.append("name", form.name);
-      fd.append("crop", form.crop);
-      fd.append("profit", form.profit);
-      fd.append("story", form.story);
-
-      if (form.image) {
-        fd.append("image", form.image);
-      }
+      Object.keys(form).forEach((k) => {
+        fd.append(k, form[k]);
+      });
 
 
       const config = {
@@ -124,9 +103,12 @@ export default function Stories() {
       resetForm();
       loadStories();
 
+      window.scrollTo({ top: 400, behavior: "smooth" });
 
-    } catch {
 
+    } catch (err) {
+
+      console.error(err);
       alert("Upload failed ❌");
 
     } finally {
@@ -147,13 +129,9 @@ export default function Stories() {
       crop: s.crop,
       profit: s.profit,
       story: s.story,
-      image: null,
     });
 
-
-    setPreview(getImage(s.image, s.name));
-
-    window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
 
@@ -164,13 +142,21 @@ export default function Stories() {
     if (!window.confirm("Delete this story?")) return;
 
 
-    await api.delete(`/api/stories/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    try {
 
-    loadStories();
+      await api.delete(`/api/stories/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+
+      loadStories();
+
+    } catch {
+
+      alert("Delete failed ❌");
+
+    }
   };
 
 
@@ -180,57 +166,33 @@ export default function Stories() {
 
     setEditId(null);
 
-    setPreview(null);
-
     setForm({
       name: "",
       crop: "",
       profit: "",
       story: "",
-      image: null,
     });
   };
 
 
-  /* ================= GENDER LOGIC ================= */
+  /* ================= AVATAR ================= */
 
-  const femaleNames = [
-    "sunita", "kavita", "pooja", "seema",
-    "rekha", "anita", "priya", "sneha",
-    "neha", "swati", "rupa", "komal",
-    "monika", "deepa", "shital"
-  ];
+  const getInitial = (name) => {
 
+    if (!name) return "?";
 
-  const isFemale = (name) => {
-
-    if (!name) return false;
-
-    const n = name.toLowerCase();
-
-    return femaleNames.some(f => n.includes(f));
+    return name.charAt(0).toUpperCase();
   };
 
 
-  /* ================= IMAGE ================= */
+  /* ================= PAGINATION ================= */
 
-  const getImage = (img, name) => {
+  const totalPages = Math.ceil(stories.length / PAGE_SIZE);
 
-    // If uploaded image exists
-    if (img) {
+  const start = (page - 1) * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
 
-      if (img.startsWith("http")) return img;
-
-      return `${API_URL}${img}`;
-    }
-
-    // No image → gender default
-    if (isFemale(name)) {
-      return femaleDefault;
-    }
-
-    return maleDefault;
-  };
+  const visibleStories = stories.slice(start, end);
 
 
   /* ================= UI ================= */
@@ -249,25 +211,6 @@ export default function Stories() {
 
 
         <form onSubmit={handleSubmit}>
-
-
-          {/* IMAGE PREVIEW */}
-          {preview && (
-
-            <div className="image-preview">
-
-              <img src={preview} alt="Preview" />
-
-            </div>
-
-          )}
-
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFile}
-          />
 
 
           <input
@@ -291,7 +234,7 @@ export default function Stories() {
           <input
             name="profit"
             type="number"
-            placeholder="Profit"
+            placeholder="Profit (₹)"
             value={form.profit}
             onChange={handleChange}
             required
@@ -300,7 +243,7 @@ export default function Stories() {
 
           <textarea
             name="story"
-            placeholder="Story"
+            placeholder="Success Story"
             value={form.story}
             onChange={handleChange}
             required
@@ -342,21 +285,32 @@ export default function Stories() {
 
       {/* ================= LIST ================= */}
 
-      <h2 className="list-title">📚 Success Stories</h2>
+      <h2 className="list-title">
+        📚 Success Stories
+      </h2>
+
+
+      {stories.length === 0 && (
+
+        <p className="empty-msg">
+          No stories yet. Add first one 🚜
+        </p>
+
+      )}
 
 
       <div className="story-list">
 
 
-        {stories.map((s) => (
+        {visibleStories.map((s) => (
 
           <div key={s._id} className="story-card">
 
 
-            <img
-              src={getImage(s.image, s.name)}
-              alt={s.name}
-            />
+            {/* AVATAR */}
+            <div className="avatar-circle">
+              {getInitial(s.name)}
+            </div>
 
 
             <div className="story-content">
@@ -396,6 +350,37 @@ export default function Stories() {
         ))}
 
       </div>
+
+
+      {/* ================= PAGINATION ================= */}
+
+      {totalPages > 1 && (
+
+        <div className="pagination">
+
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(p => p - 1)}
+          >
+            ◀
+          </button>
+
+
+          <span>
+            Page {page} / {totalPages}
+          </span>
+
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(p => p + 1)}
+          >
+            ▶
+          </button>
+
+        </div>
+
+      )}
 
     </div>
   );
