@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
-import "./publicContact.css";
+import "./PublicContact.css";
 
 export default function PublicContact() {
   const [form, setForm] = useState({
