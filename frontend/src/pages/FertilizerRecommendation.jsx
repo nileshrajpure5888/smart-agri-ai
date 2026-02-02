@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import Layout from "../components/Layout";
+console.log("API URL:", import.meta.env.VITE_API_URL);
 
 export default function FertilizerRecommendation() {
   const [formData, setFormData] = useState({
