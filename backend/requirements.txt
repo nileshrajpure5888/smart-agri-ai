@@ -26,3 +26,5 @@ email-validator==2.2.0
 rapidfuzz==3.9.6
 
 reportlab==4.1.0
+twilio==9.0.4
+
