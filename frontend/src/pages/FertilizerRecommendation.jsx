@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import Layout from "../components/Layout";
-console.log("API URL:", import.meta.env.VITE_API_URL);
+
+/* ✅ API URL from Vercel Environment */
+const API = import.meta.env.VITE_API_URL;
+console.log("API URL:", API);
 
 export default function FertilizerRecommendation() {
   const [formData, setFormData] = useState({
@@ -19,7 +22,9 @@ export default function FertilizerRecommendation() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
 
-  // ✅ Soil Health Score (UI only)
+  /* ===============================
+      ✅ Soil Health Score (UI Only)
+     =============================== */
   const soilScore = useMemo(() => {
     const N = Number(formData.nitrogen || 0);
     const P = Number(formData.phosphorus || 0);
@@ -58,23 +63,34 @@ export default function FertilizerRecommendation() {
       ? "bg-warning"
       : "bg-danger";
 
+  /* ===============================
+      ✅ Handle Input Change
+     =============================== */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   };
 
+  /* ===============================
+      ✅ Get Recommendation
+     =============================== */
   const submitForm = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setResult(null);
     setError("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/fertilizer/report`, {
+      const res = await fetch(`${API}/api/fertilizer/recommend`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
+
         body: JSON.stringify({
           ...formData,
+
           nitrogen: Number(formData.nitrogen),
           phosphorus: Number(formData.phosphorus),
           potassium: Number(formData.potassium),
@@ -94,28 +110,40 @@ export default function FertilizerRecommendation() {
       }
 
       setResult(data);
-    } catch {
-      setError("❌ Backend not reachable. Start FastAPI.");
+    } catch (err) {
+      console.error(err);
+      setError("❌ Backend not reachable. Please try later.");
     } finally {
       setLoading(false);
     }
   };
 
+  /* ===============================
+      ✅ Copy Message
+     =============================== */
   const copyMessage = async () => {
     if (!result?.farmer_message) return;
+
     await navigator.clipboard.writeText(result.farmer_message);
     alert("✅ Copied!");
   };
 
+  /* ===============================
+      ✅ Download PDF
+     =============================== */
   const downloadPDF = async () => {
     setError("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/fertilizer/report`, {
+      const res = await fetch(`${API}/api/fertilizer/report`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
+
         body: JSON.stringify({
           ...formData,
+
           nitrogen: Number(formData.nitrogen),
           phosphorus: Number(formData.phosphorus),
           potassium: Number(formData.potassium),
@@ -128,7 +156,7 @@ export default function FertilizerRecommendation() {
       });
 
       if (!res.ok) {
-        setError("❌ Failed to generate PDF report.");
+        setError("❌ Failed to generate PDF.");
         return;
       }
 
@@ -138,101 +166,100 @@ export default function FertilizerRecommendation() {
       const a = document.createElement("a");
       a.href = url;
       a.download = "fertilizer_report.pdf";
+
       document.body.appendChild(a);
       a.click();
       a.remove();
 
       window.URL.revokeObjectURL(url);
-    } catch {
-      setError("❌ PDF download failed. Please check backend.");
+    } catch (err) {
+      console.error(err);
+      setError("❌ PDF download failed.");
     }
   };
 
+  /* ===============================
+      ✅ UI
+     =============================== */
   return (
     <Layout>
       <div className="container-fluid py-3">
+
         {/* Header */}
         <div className="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+
           <div>
             <h2 className="fw-bold mb-1">🌱 Fertilizer Recommendation</h2>
-            <p className="text-muted mb-2">
-              Soil inputs → AI fertilizer plan + Stage-wise schedule + PDF report
-            </p>
 
-            <button
-              type="button"
-              className="btn btn-outline-primary btn-sm"
-              data-bs-toggle="modal"
-              data-bs-target="#soilGuideModal"
-            >
-              📌 NPK / pH Value कशी मिळवायची?
-            </button>
+            <p className="text-muted mb-2">
+              Soil inputs → AI fertilizer plan + PDF report
+            </p>
           </div>
 
           <span className="badge text-bg-dark px-3 py-2 fs-6">
             Soil Score: {soilScore}/100 ({soilLabel})
           </span>
+
         </div>
 
         <div className="row g-4">
-          {/* LEFT FORM */}
+
+          {/* ================= LEFT FORM ================= */}
           <div className="col-12 col-lg-6">
+
             <div className="card shadow-sm border-0">
               <div className="card-body p-4">
+
                 <h5 className="fw-bold mb-3">🧪 Soil + Farmer Inputs</h5>
 
-                {/* Soil meter */}
+                {/* Soil Meter */}
                 <div className="bg-light rounded-3 p-3 mb-4 border">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span className="fw-semibold">🌍 Soil Health Meter</span>
-                    <span className="fw-bold">
-                      {soilScore}/100 <span className="text-muted">({soilLabel})</span>
-                    </span>
+
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>🌍 Soil Health</span>
+                    <b>{soilScore}/100</b>
                   </div>
 
-                  <div className="progress" style={{ height: "10px" }}>
+                  <div className="progress" style={{ height: 10 }}>
                     <div
                       className={`progress-bar ${soilBarClass}`}
                       style={{ width: `${soilScore}%` }}
-                      role="progressbar"
                     />
                   </div>
 
-                  <small className="text-muted d-block mt-2">
-                    Meter updates automatically based on NPK, pH & moisture.
-                  </small>
                 </div>
 
                 <form onSubmit={submitForm}>
-                  {/* Farmer details (send only) */}
+
+                  {/* Farmer */}
                   <div className="row g-3 mb-3">
-                    <div className="col-12 col-md-6">
-                      <label className="form-label fw-semibold">👨‍🌾 Farmer Name</label>
+
+                    <div className="col-md-6">
+                      <label>Farmer Name</label>
                       <input
-                        type="text"
                         className="form-control"
                         name="farmer_name"
                         value={formData.farmer_name}
                         onChange={handleChange}
-                        placeholder="Enter farmer name"
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
-                      <label className="form-label fw-semibold">🏡 Village</label>
+                    <div className="col-md-6">
+                      <label>Village</label>
                       <input
-                        type="text"
                         className="form-control"
                         name="village"
                         value={formData.village}
                         onChange={handleChange}
-                        placeholder="Enter village name"
                       />
                     </div>
+
                   </div>
 
+                  {/* Language */}
                   <div className="mb-3">
-                    <label className="form-label fw-semibold">🌍 Language</label>
+                    <label>Language</label>
+
                     <select
                       className="form-select"
                       name="language"
@@ -245,90 +272,87 @@ export default function FertilizerRecommendation() {
                     </select>
                   </div>
 
+                  {/* Crop */}
                   <div className="mb-3">
-                    <label className="form-label fw-semibold">🌾 Crop Name</label>
+                    <label>Crop</label>
+
                     <input
-                      type="text"
                       className="form-control"
                       name="crop"
+                      required
                       value={formData.crop}
                       onChange={handleChange}
-                      placeholder="e.g. Rice / Wheat / Onion / Cotton"
-                      required
                     />
                   </div>
 
+                  {/* NPK */}
                   <div className="row g-3">
-                    <div className="col-12 col-md-6">
-                      <label className="form-label fw-semibold">Nitrogen (N)</label>
+
+                    <div className="col-md-6">
+                      <label>Nitrogen</label>
                       <input
                         type="number"
-                        min="0"
                         className="form-control"
                         name="nitrogen"
+                        required
                         value={formData.nitrogen}
                         onChange={handleChange}
-                        required
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
-                      <label className="form-label fw-semibold">Phosphorus (P)</label>
+                    <div className="col-md-6">
+                      <label>Phosphorus</label>
                       <input
                         type="number"
-                        min="0"
                         className="form-control"
                         name="phosphorus"
+                        required
                         value={formData.phosphorus}
                         onChange={handleChange}
-                        required
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
-                      <label className="form-label fw-semibold">Potassium (K)</label>
+                    <div className="col-md-6">
+                      <label>Potassium</label>
                       <input
                         type="number"
-                        min="0"
                         className="form-control"
                         name="potassium"
+                        required
                         value={formData.potassium}
                         onChange={handleChange}
-                        required
                       />
                     </div>
 
-                    <div className="col-12 col-md-6">
-                      <label className="form-label fw-semibold">Soil pH</label>
+                    <div className="col-md-6">
+                      <label>pH</label>
                       <input
                         type="number"
                         step="0.1"
-                        min="0"
-                        max="14"
                         className="form-control"
                         name="ph"
+                        required
                         value={formData.ph}
                         onChange={handleChange}
-                        required
                       />
                     </div>
 
                     <div className="col-12">
-                      <label className="form-label fw-semibold">💧 Moisture (%)</label>
+                      <label>Moisture %</label>
                       <input
                         type="number"
-                        min="0"
                         className="form-control"
                         name="moisture"
+                        required
                         value={formData.moisture}
                         onChange={handleChange}
-                        required
                       />
                     </div>
+
                   </div>
 
                   {error && (
-                    <div className="alert alert-danger mt-3 mb-0" role="alert">
+                    <div className="alert alert-danger mt-3">
                       {error}
                     </div>
                   )}
@@ -336,198 +360,86 @@ export default function FertilizerRecommendation() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="btn btn-success w-100 mt-4 fw-bold"
+                    className="btn btn-success w-100 mt-4"
                   >
                     {loading ? "⏳ Generating..." : "✅ Get Recommendation"}
                   </button>
+
                 </form>
+
               </div>
             </div>
+
           </div>
 
-          {/* RIGHT RESULT */}
+          {/* ================= RIGHT RESULT ================= */}
           <div className="col-12 col-lg-6">
+
             <div className="card shadow-sm border-0">
               <div className="card-body p-4">
-                <h5 className="fw-bold mb-3">📌 Recommendation Result</h5>
+
+                <h5 className="fw-bold mb-3">📌 Result</h5>
 
                 {!result && !loading && (
-                  <div className="alert alert-secondary mb-0">
-                    Fill soil values and click <b>Get Recommendation</b>.
+                  <div className="alert alert-secondary">
+                    Enter values and click button.
                   </div>
                 )}
 
                 {loading && (
-                  <div className="alert alert-warning mb-0">
-                    ⏳ AI is generating recommendation...
+                  <div className="alert alert-warning">
+                    AI is working...
                   </div>
                 )}
 
                 {result && (
                   <>
-                    {/* Summary box */}
-                    <div className="border rounded-3 p-3 bg-success-subtle mb-3">
-                      <p className="mb-2">
-                        <b>🌾 Crop:</b> {result.crop}
-                      </p>
-                      <p className="mb-2">
-                        <b>🧪 Basal Fertilizer:</b> {result.fertilizer}
-                      </p>
-                      <p className="mb-2">
-                        <b>📦 Dosage:</b> {result.dosage}
-                      </p>
-                      <p className="mb-0">
-                        <b>⏰ Timing:</b> {result.timing}
-                      </p>
+
+                    <div className="border p-3 rounded mb-3 bg-success-subtle">
+
+                      <p><b>Crop:</b> {result.crop}</p>
+                      <p><b>Fertilizer:</b> {result.fertilizer}</p>
+                      <p><b>Dosage:</b> {result.dosage}</p>
+                      <p><b>Timing:</b> {result.timing}</p>
+
                     </div>
 
-                    {/* ✅ Stage Plan table */}
-                    {Array.isArray(result.stage_plan) && result.stage_plan.length > 0 && (
-                      <div className="border rounded-3 p-3 bg-light mb-3">
-                        <h6 className="fw-bold mb-2">📅 Stage-wise Fertilizer Plan</h6>
+                    <div className="border p-3 rounded bg-primary-subtle mb-3">
 
-                        <div className="table-responsive">
-                          <table className="table table-bordered table-sm align-middle mb-0">
-                            <thead className="table-dark">
-                              <tr>
-                                <th style={{ width: 90 }}>Day</th>
-                                <th>Stage</th>
-                                <th>Fertilizer</th>
-                                <th>Dosage</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {result.stage_plan.map((s, idx) => (
-                                <tr key={idx}>
-                                  <td className="fw-bold">Day {s.day}</td>
-                                  <td>{s.stage}</td>
-                                  <td>{s.fertilizer}</td>
-                                  <td>{s.dosage}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
+                      <h6>Farmer Message</h6>
 
-                    {/* ✅ Notes */}
-                    {Array.isArray(result.notes) && result.notes.length > 0 && (
-                      <div className="alert alert-warning">
-                        <b>⚠️ Important Notes:</b>
-                        <ul className="mb-0 mt-2">
-                          {result.notes.map((n, idx) => (
-                            <li key={idx}>{n}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Farmer message */}
-                    <div className="border rounded-3 p-3 bg-primary-subtle mb-3">
-                      <h6 className="fw-bold mb-2">📢 Farmer Message</h6>
-                      <pre
-                        className="mb-0"
-                        style={{ whiteSpace: "pre-wrap", fontFamily: "inherit" }}
-                      >
+                      <pre style={{ whiteSpace: "pre-wrap" }}>
                         {result.farmer_message}
                       </pre>
+
                     </div>
 
                     <div className="d-grid gap-2 d-md-flex">
-                      <button className="btn btn-dark w-100" onClick={copyMessage}>
+
+                      <button
+                        className="btn btn-dark w-100"
+                        onClick={copyMessage}
+                      >
                         📋 Copy
                       </button>
-                      <button className="btn btn-primary w-100" onClick={downloadPDF}>
-                        📄 Download PDF
+
+                      <button
+                        className="btn btn-primary w-100"
+                        onClick={downloadPDF}
+                      >
+                        📄 PDF
                       </button>
+
                     </div>
+
                   </>
                 )}
+
               </div>
             </div>
+
           </div>
-        </div>
-      </div>
 
-      {/* ✅ Help Modal */}
-      <div className="modal fade" id="soilGuideModal" tabIndex="-1">
-        <div className="modal-dialog modal-lg modal-dialog-scrollable">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title fw-bold">🌿 NPK आणि Soil pH कसे तपासायचे?</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div className="modal-body">
-              <div className="alert alert-info">
-                ✅ खत शिफारस अचूक मिळण्यासाठी <b>NPK आणि pH value</b> आवश्यक आहे.
-              </div>
-
-              <h6 className="fw-bold mt-3">✅ 1) Soil Testing Laboratory (Best & Accurate)</h6>
-              <ul>
-                <li>शेतातून मातीचा नमुना घ्या</li>
-                <li>Government Soil Testing Lab / KVK / Private Lab मध्ये द्या</li>
-                <li>Soil Report मध्ये N, P, K, pH मिळतो</li>
-              </ul>
-
-              <h6 className="fw-bold mt-3">✅ 2) Soil Health Card</h6>
-              <ul>
-                <li>Soil Health Card मध्ये NPK + pH दिलेले असते</li>
-                <li>त्या value app मध्ये टाका ✅</li>
-              </ul>
-
-              <h6 className="fw-bold mt-3">✅ 3) Mini Soil Testing Kit</h6>
-              <ul>
-                <li>Portable kit वापरून शेतातच टेस्ट करता येते</li>
-                <li>उदा: pH meter, NPK kit, EC meter</li>
-              </ul>
-
-              <div className="row mt-2">
-                <div className="col-md-6">
-                  <div className="border rounded p-2 bg-light">
-                    <b>✅ फायदे</b>
-                    <ul className="mb-0">
-                      <li>Instant result</li>
-                      <li>Multiple times use</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="border rounded p-2 bg-warning-subtle">
-                    <b>⚠️ तोटे</b>
-                    <ul className="mb-0">
-                      <li>Lab एवढे accurate नाही</li>
-                      <li>Step चुकीचे झाले तर result चुकीचा</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <h6 className="fw-bold mt-3">✅ 4) pH Meter / pH Paper</h6>
-              <ol>
-                <li>माती + स्वच्छ पाणी mix करा (1:2)</li>
-                <li>pH paper किंवा meter dip करा</li>
-                <li>pH वाचून app मध्ये टाका</li>
-              </ol>
-
-              <h6 className="fw-bold mt-3">✅ 5) Mobile Soil Testing Vans</h6>
-              <ul>
-                <li>काही जिल्ह्यात Mobile Soil Testing Van गावात येते</li>
-                <li>तात्काळ soil test करून मिळते</li>
-              </ul>
-
-              <div className="alert alert-success mt-3 mb-0">
-                ✅ Tip: Soil report नसल्यास जवळच्या Agriculture Officer / KVK ला संपर्क करा.
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button className="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </Layout>
