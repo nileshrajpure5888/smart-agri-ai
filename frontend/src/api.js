@@ -1,79 +1,40 @@
 import axios from "axios";
 
-
-// ==========================
-// BASE URL (ENV READY)
-// ==========================
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000",
-  timeout: 60000,
+  baseURL: "https://smart-agri-ai-2.onrender.com",
+  timeout: 5000,
 });
 
+/* REQUEST INTERCEPTOR */
+api.interceptors.request.use((config) => {
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
 
-// ==========================
-// REQUEST INTERCEPTOR
-// ==========================
-api.interceptors.request.use(
-  (config) => {
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-    const token =
-      localStorage.getItem("token") ||
-      sessionStorage.getItem("token");
+  return config;
+});
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-
-  },
-  (error) => Promise.reject(error)
-);
-
-
-// ==========================
-// RESPONSE INTERCEPTOR
-// ==========================
+/* RESPONSE INTERCEPTOR */
 api.interceptors.response.use(
-  (response) => response,
-
+  (res) => res,
   (error) => {
+    console.log("API ERROR:", error.message);
 
-    const status = error?.response?.status;
+    if (error.code === "ECONNABORTED") {
+      alert("Server is slow. Try again.");
+    }
 
-
-    // ==========================
-    // UNAUTHORIZED
-    // ==========================
-    if (status === 401) {
-
-      console.warn("401 - Session expired");
-
+    if (error.response?.status === 401) {
       localStorage.clear();
-      sessionStorage.clear();
-
-      if (!window.location.pathname.includes("login")) {
-        window.location.href = "/login";
-      }
+      window.location.href = "/login";
     }
-
-
-    // ==========================
-    // FORBIDDEN
-    // ==========================
-    if (status === 403) {
-
-      alert("You don't have permission ❌");
-
-      if (!window.location.pathname.includes("dashboard")) {
-        window.location.href = "/dashboard";
-      }
-    }
-
 
     return Promise.reject(error);
   }
 );
-
 
 export default api;

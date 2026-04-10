@@ -1,2 +1,23 @@
+# Environment files
+.env
+backend/.env
+
+# Virtual env
+venv/
+backend/venv/
+
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Python cache
+__pycache__/
+
+# local env
+.env.local
+
+# python compiled files
+*.pyc
+
+# vercel config
 .vercel
-.env*.local
